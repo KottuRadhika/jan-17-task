@@ -1,0 +1,233 @@
+<html>
+    <head>
+    
+        <title>xml sample</title>
+        <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+    
+    </head>
+    <body>
+        <div>
+            <p style="text-align: right">(291-295)pages</p>
+            <P><i>Figure 9: Layout change.</i></P>
+            <div class="box">
+                <center>
+                <img src="box.png"  width="1000px", height="100px">
+                </center>
+            </div>
+            <br><br>
+             <p >The semantics of a forward-chaining rule are that if the antecedent is shown to be true, all of
+the consequents are asserted in the database. The question mark in front of a symbol
+states that that symbol is a variable that can have different bindings at run time, i.e., when
+the rule is applied. For example, in the above backward-chaining rule, the variables ?m
+and ?s are bound to the name of a marker and the name of a sequence, respectively.</p> 
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;At the beginning of the mining process, there are no active or inactive sequences.
+If a sequence recognizes a marker, it checks if the marker matches the layout of the
+previously recognized markers. The marker is ignored unless there is a layout match.
+When the sequence is finished with the line, it sends the sequence manager a message
+about its findings. If the sequence has recognized a marker and does not violate any
+constraints(which the inference engine checks against the logical map built thus far), the
+sequence is permitted to make the marker its current head marker and make the appropriate
+modifications in the logical map. If a constraint violation is inferred, the sequence
+manager puts the sequence on the list of inactive sequences.</p>
+             <p>&nbsp;&nbsp;&nbsp;&nbsp;After the active sequences have examined the line and failed, the sequence manager
+lets the inactive sequences, if there are any, do the same. This second chance heuristic
+has its empirical justification in the fact that some marker sequences start early in the
+document, become inactive because of other sequences, and resurface in the middle or
+at the end of the document.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;After the layout and the logical map of the document have been computed, the
+tagger uses them to tag the text of the document. The tagger is allowed to interact with
+the inference engine, because it may need to do some additional inferences. The end
+result is the text of the FAQ whose logical components are tagged.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;FAQ Minder functions as the front-end of FAQ Finder’s indexing mechanism. Each
+FAQ is first mined for its structural components. Once the structural components of the
+FAQ are found and tagged, the FAQ is given to FAQ Finder for further indexing. The
+current implementation of FAQ Finder combines scalable, knowledge-intensive NLP
+techniques with numerical approaches of information retrieval. Thus, each questionanswer pair in a tagged FAQ is indexed in terms of its question and its answer. The
+indexing of questions is done so that at run time FAQ Finder can compute the semantic
+similarity between the terms in a submitted question and the terms in every question in
+the FAQ. The statistical similarity is supported through indexing each found Q&A pair
+as a document in a vector space of Q&A’s in a given FAQ.</p>
+            <h2>EVALUATION</h2>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;We have tested FAQ Minder on 100 FAQs. FAQ Minder’s task was to identify
+tables of contents, question-answer pairs, and bibliographies. All in all, FAQ Minder had
+to identify 2,399 items. When FAQ Minder and a human judge were in agreement on an
+item, the item was said to be completely recognized. When FAQ Minder identified part
+of an item, the item was said to be partially recognized. When FAQ Minder wrongly
+tagged a chunk of text, that chunk of text was referred to as a false positive. The items
+identified by a human judge but missed by FAQ Minder were referred to as unrecognized.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Of 2,399 items, 1,943 items were completely recognized, 70 items were partially
+recognized, 81 were considered as false positives, and 305 items were unrecognized. In
+percentage terms, FAQ Minder completely recognized 81% of items, partially recognized
+3% , wrongly tagged 3.4%, and failed to identify 12.6%.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;We identified several causes of failure while analyzing the results of the experiments. The most prominent among them was what we call “sudden layout changes due
+to typos.” In other words, the layout between two consecutive markers in a sequence
+was different due to a typo. As an example, consider the sequence in Figure 9 with the
+layout characters made visible. The markers “[10],” “[11],” and “[12]” clearly belong to
+the same sequence. Yet, because the layout of the “[11]” marker is different from the
+layout of the “[10]” marker, the sequence is prematurely terminated at “[10].”</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;We attributed the second cause of failure to typos in markers themselves. Consider
+the following example:</p><br>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5) Perl books.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+             7) Perl software.</p><br>
+             <p>&nbsp;&nbsp;&nbsp;&nbsp;The current rules of marker extension do not allow the system to extend the “5)”
+marker on the “7)” marker.</p>
+             <p>&nbsp;&nbsp;&nbsp;&nbsp;Finally, we found markers for which the system had no rules of extension. For
+instance, we discovered that some FAQ writers use Roman numerals in conjunction with
+letters and Arabic numerals, e.g. “III.1.a).” FAQ Minder could not handle such cases.</p>
+             <p>&nbsp;&nbsp;&nbsp;&nbsp;These failures suggest several directions for future research. The first direction is
+to introduce some error recovery into the system. Since the typos are a norm rather than
+an exception, the system should have a coherent way to deal with them. The marker typo
+failures can be handled through a simulation mechanism. Sometimes a marker is found
+whose structure is consistent with the structure of the previous markers in the active
+sequence, but the sequence’s head cannot be extended to the found marker. In such
+cases, the sequence manager can compute all of the possible extensions of the head
+marker and see if any of those extensions can be extended to the found marker. For
+example, if the head marker of the active sequence is “[5]” and the found marker is “[7],”
+the sequence manager can simulate the extension of “[5]” to “[6]” and then verify that
+“[6]” can be extended to “[7].”</p>
+             <p>&nbsp;&nbsp;&nbsp;&nbsp;The layout typo failures exemplified in Figure 9 can be handled by the same
+simulation mechanism, with one exception. After the sequence manager verifies that one
+of the possible extensions can be extended to the found marker, it then tries to find it in
+the text of the FAQ between the line with the current head marker and the line with the
+found marker. If the marker is found, possibly with a different layout, the sequence
+</p>
+             <p>manager integrates it into the sequence. This strategy would allow the sequence manager
+to integrate the marker “[11]” into the sequence although the layout of “[11]” is different.</p>
+             <p>&nbsp;&nbsp;&nbsp;&nbsp;The second direction is to give FAQ Minder a limited ability to process natural
+language phrases. Many FAQ writers state explicitly that a table of contents, a glossary,
+or a bibliography is about to begin by using the following phrases: “Table of Contents,”
+“List of Topics,” “The following questions are answered below,” etc. If FAQ Minder can
+recognize such phrases, it can assume that the sequence that follows marks the table of
+contents, the glossary, the topic list, etc. Toward this end, we have specified a number
+of the most common ways in which people can say that the table of contents is about to
+start. We have run our small program on 150 FAQs. The program correctly recognized
+such sentences in 111 FAQs.</p>
+             <p>&nbsp;&nbsp;&nbsp;&nbsp;The third research direction involves the supervised mode of FAQ Minder. In the
+supervised mode, FAQ Minder displays its progress through the text of a FAQ in a simple
+graphical user interface. As the system goes through the text of the FAQ, it highlights
+different FAQ components as soon as it detects them. For example, when the beginning
+of a table of contents is detected, the system informs the user that it has started tracking
+the table of contents. The user then has the opportunity to verify that the system has
+made a correct decision or tell the system that its decision is wrong.</p>
+             <p>&nbsp;&nbsp;&nbsp;&nbsp;The supervised mode requires little inference on the part of the system. However,
+it requires a large time commitment on the part of the user. Our conjecture here is that
+ultimately a system that recognizes its own limitations and overcomes them by asking
+the user intelligent questions saves the user more time than a completely independent
+system whose work requires laborious verification.</p><br>
+            <h2 >FUTURE TRENDS</h2>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;We believe that text-based data mining will continue to evolve primarily in three
+directions: machine learning, natural language processing, and statistical analysis. A
+promising research direction seems to be a combination of natural language processing
+and machine learning. This is due to the fact that in many domains documents have a
+clearly recognizable structure that can be either learned from examples or encoded in a
+system of rules for parsing. Once that structure is found, its components can be mined
+for content with restricted natural language processing techniques.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Our work on FAQ Minder is a step in this research direction. Viewed abstractly, FAQ
+Minder is a rule-based document parser. The system presents a domain-dependent
+approach to free-text data mining. The rules that the system uses are domain-dependent
+and manually encoded. However, this need not be the case. These rules may well be
+learned automatically through a machine-learning approach. The trick here is how much
+manual knowledge engineering the machine-learning approach requires. Although many
+machine-learning approaches exhibit impressive learning rates and results, they require
+a domain theory that is either explicitly given to the learning algorithm or implicitly
+encoded in the way learning is done. Sometimes it is more practical to encode the rules
+manually than to first represent a domain theory and then wait for the learner to give you
+the rules automatically</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Statistical analysis is gaining prominence in text-based data mining due to the
+increasing availability of large text corpora. The corpora, due to their sheer volume, allow
+statistical techniques to achieve statistically significant results. In recent years, there
+has been a resurgence in research on statistical methods in natural language processing
+(Brill & Mooney, 1997). These methods employ techniques that aim to automatically
+extract linguistic knowledge from natural language corpora rather than require the system
+developer to do the knowledge engineering manually. While the initial results of the
+corpora-based text mining have been promising, most of the effort has been focused on
+very low-level tasks such as part-of-speech tagging, text segmentation, and syntactic
+parsing (Charniak, 1997), which suggests that some amount of domain-dependent
+knowledge engineering may well be mandatory. One exception to these low-level tasks
+is the research reported by Ng and Zelle (1997), who apply some corpus-based techniques to the problems of word-sense disambiguation and semantic parsing. But, while
+the reported results are encouraging, they are tentative.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Another prominent trend in textual data mining that relies heavily on statistical
+techniques is automatic thesaurus construction (Srinivasan, 1992). Thesauri are widely
+used in both indexing and retrieving textual documents. Indexers use thesauri to select
+the most appropriate terms to describe content; retrievers use thesauri to formulate better
+queries. For example, if a submitted query does not return acceptable results, the terms
+of the query can be extended with related terms from a thesaurus. Since manual thesaurus
+construction is extremely labor intensive, it is almost guaranteed that future research
+efforts will focus on completely or partially automating thesaurus construction. In
+automatic thesaurus construction, the domain is defined in terms of the available
+documents. The basic idea is to apply certain statistical procedures to identify important
+terms and, if possible, relationships among them. A promising direction of research in
+this area of text data mining is the identification of non-trivial semantic relationships.
+While statistical methods are good at detecting broad semantic relationships such as
+genus-species or association (Bookstein & Swanson, 1974), they alone are not sufficient
+for more subtle relationships such as part-whole, taxonomy, synonymy, and antonymy.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Question answering from large online collections is an area that uses many textual
+data-mining techniques. Given a collection of documents and a collection of questions,
+a question-answering system can be viewed as mining the document texts for answers
+to the questions. In contrast to standard information retrieval systems, e.g., search
+engines, question-answering systems are not allowed to return a full document or a set
+of documents in response to a question. The assumption here is that the user has no
+interest or time to sift through large texts looking for answers.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Question answering has recently achieved enough status and attracted enough
+research interest to be awarded a separate track at the annual Text Retrieval Conference
+(TREC) (Voorhees & Harman, 2000; Voorhees & Tice, 2000). A typical questionanswering system requires short answers for short factual questions such as “Who is
+George Washington?” Most modern question-answering systems operate in two steps.
+Given a question, they first choose a small subset of the available documents that are
+likely to contain an answer to the submitted question and then mine each of those
+documents for a specific answer or a set of answers. Statistical means have been rather
+successful in narrowing questions to small collections of documents (Clarke, Cormack,
+& Lynam, 2001). However, they are not as successful at extracting the actual answers from
+</p>
+            <p>the selected documents. As a system, FAQ Minder was built to address that very
+problem. More research into document structure and its interaction with document
+content is and will remain of great importance for question answering.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Information extraction is another emerging trend in textual data mining (Cardie,
+1997). An information extraction system takes a free text as input and mines it for answers
+to a specified topic or domain of interest. The objective is to extract enough information
+about the topic of interest and encode that information in a format suitable for a database.
+Unlike in-depth NLP systems, information extractors do a cursory scan of the input text
+to identify potential areas of interest and then use more expensive text-processing
+techniques to mine those areas of interest for information. An example of an information
+extraction system is a system that constructs database records from news wires on
+mergers and acquisitions. Each news wire is turned into a set of slot-value pairs that
+specify who merged with whom, when, etc. One of the greatest challenges and research
+opportunities of information extraction is portability. Information extraction systems are
+very domain dependent. Currently, there are information extraction systems that analyze
+life insurance applications (Glasgow, Mandell, Binney, Ghemri, & Fisher, 1997) or
+summarize news wires on terrorist activities (MUC-3, 1991; MUC-4, 1992). These
+systems, however, use a lot of built-in knowledge from the domains in which they operate
+and are not easily portable to other domains. The main reason for using built-in
+knowledge lies in the nature of the task. The more domain-specific knowledge an
+information extractor has, the better it performs. The principal disadvantage is that the
+manual encoding of this knowledge is labor intensive and subject to errors. Thus,
+automating domain-specific knowledge acquisition is likely to be a promising direction
+of future research.</p><br>
+            <h2>CONCLUSION</h2>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;We examined the task of mining free-text electronic documents for structure. The
+task was examined in the context of the FAQ Minder system that does the structural
+mining of FAQs found in USENET newsgroups. The system finds the logical components
+of FAQs: tables of contents, questions, answers, and bibliographies. The found logical
+components of FAQs are used by FAQ Finder, a question-answering system.</p>
+             <p>&nbsp;&nbsp;&nbsp;&nbsp;The approach to mining free text for structure advocated in FAQ Minder is
+qualitative in nature. It is based on the assumption that documents in many domains
+adhere to a set of rigid structural standards. If those standards are known to a text-mining
+system, they can be successfully put to use for a variety of tasks, such as question
+answering or information extraction. This approach complements the numerical approaches insomuch as the structural organization of information in documents is
+discovered through mining free text for content markers left behind by document writers.
+The behavior of those markers is known to the system a priori.</p>
+             <p>&nbsp;&nbsp;&nbsp;&nbsp;We presented a number of alternative approaches to mining text for structure, of
+which the most prominent are the approaches based on machine-learning methods. What
+all of these approaches have in common is the assumption that there is some fixed
+structure, such as a set of database fields, whose contents are to be filled in with chunks
+of text derived from the text being processed. FAQs can be viewed as an example of this
+</p>
+            
+            
+            
+            
+        </div>
+        
+    </body>
+</html>    
